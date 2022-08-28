@@ -1,0 +1,36 @@
+{% extends "index.html" %}
+  {% block head %}
+    <section class="py-2 text-center container">
+      <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+          <h1 class="fw-light">당신의 체력은 몇등급일까요?</h1>
+          <br>
+          <br>
+          {% block form %}
+          <div style="display:none",name ='model',value = '노인'></div>
+          <form method='POST',action="{{url_for('user')}}">
+            <b>연령대 : <select name="ageClass">
+                <option value="">연령대선택</option>
+                <option value="60">60</option>
+                <option value="70">70</option>
+                <option value="80">80</option>
+                <option value="80">90</option>
+                </select><br><br>
+              나이 :  <input type="text", name='ageDegree', placeholder="만 65이상"> <br><br>
+              키 :  <input type="text", name='height', placeholder="cm"> <br><br>
+              몸무게 :  <input type="text", name='weight', placeholder="kg"> <br><br>
+              앉아윗몸앞으로구부리기 :  <input type="text", name='trunkFlexion', placeholder="cm"> <br><br>
+              의자에 앉았다 일어나기:  <input type="text", name='standsit', placeholder="회/30초"> <br><br>
+              2분 제자리 걷기 :  <input type="text", name='twominwalk', placeholder="직접입력"> <br><br>
+              3m 표적 돌아오기 :  <input type="text", name='threeMwalk', placeholder="직접입력"> <br><br>   
+              </b><br>
+             <input type="submit" , value='결과보기' >
+          </form>
+          {% endblock %}
+          <div class="body-ml-pred">
+            <br>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endblock %}

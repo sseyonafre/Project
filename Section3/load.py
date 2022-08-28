@@ -3,6 +3,7 @@ from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 from data import results
+import pandas as pd
 
 load_dotenv()
 
@@ -18,7 +19,7 @@ DB_FILEPATH = os.path.join(os.getcwd(), DB_FILENAME)
 client = MongoClient(MONGO_URI)
 collection =client[DATABASE_NAME][COLLECTION_NAME]
 
-# api로 받아온 데이터리스트를 MongoDB 에 저장
+#api로 받아온 데이터리스트를 MongoDB 에 저장
 
 def insert_data(collection, list_data):
 
@@ -29,12 +30,6 @@ def insert_data(collection, list_data):
         except Exception as e:
             print("Error occurred while inserting {data}")
             print(e)
-insert_data(collection, results)
-conn = sqlite3.connect(DB_FILENAME)
-cursor = conn.cursor()
-for k in collection.find():
-    print(k['response']['body']['totalCount'])
-
 
 #sqlite 에 테이블 생성.
 
@@ -48,7 +43,7 @@ def create_sqlite_table():
                         id INTEGER NOT NULL,
                         ageClass INTEGER,
                         ageDegree INTEGER,
-                        aggGbn VARCHAR(20),
+                        ageGbn VARCHAR(20),
                         certGbn VARCHAR(20),
                         height INTEGER,
                         weight INTEGER,
@@ -75,50 +70,112 @@ def move_to_rdb(collection):
     conn = sqlite3.connect(DB_FILENAME)
     cursor = conn.cursor()
     for k in collection.find():
-        if int(k['response']['body']['totalCount']) > 1:
-            item = k['response']['body']['items']['item'] 
+        try:
+            #if int(k['response']['body']['totalCount']) > 10001:
+            if k['response']['body']['pageNo']=='1':
+                if 1<int(k['response']['body']['totalCount']):
+                    try:
+                        item = k['response']['body']['items']['item']
+                        for i in range(len(item)):
+                            cursor.execute(f"""INSERT OR IGNORE INTO User(ageClass,
+                            ageDegree,
+                            ageGbn,
+                            certGbn,
+                            height,
+                            weight,
+                            crunch,
+                            jump,
+                            trunkFlexion,
+                            IllinoisAgility,
+                            BMI,
+                            situp,
+                            standinglongjump,
+                            standsit,
+                            twominwalk,
+                            threeMwalk,
+                            exercise,
+                            testYm) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                            (item[i]['ageClass'],
+                            item[i]['ageDegree'],
+                            item[i]['ageGbn'],
+                            item[i]['certGbn'],
+                            item[i]['itemF001'],
+                            item[i]['itemF002'],
+                            item[i]['itemF009'],
+                            item[i]['itemF010'],
+                            item[i]['itemF012'],
+                            item[i]['itemF013'],
+                            item[i]['itemF018'],
+                            item[i]['itemF019'],
+                            item[i]['itemF022'],
+                            item[i]['itemF023'],
+                            item[i]['itemF025'],
+                            item[i]['itemF026'],
+                            item[i]['presNote'],
+                            item[i]['testYm']))
+                            conn.commit()
+                    except KeyError:
+                        pass
+            elif k['response']['body']['totalCount']=='2':
+                if int(k['response']['body']['totalCount']) > 10001:
+                    try:
+                        item = k['response']['body']['items']['item']
+                        for i in range(len(item)):
+                            cursor.execute(f"""INSERT OR IGNORE INTO User(ageClass,
+                            ageDegree,
+                            ageGbn,
+                            certGbn,
+                            height,
+                            weight,
+                            crunch,
+                            jump,
+                            trunkFlexion,
+                            IllinoisAgility,
+                            BMI,
+                            situp,
+                            standinglongjump,
+                            standsit,
+                            twominwalk,
+                            threeMwalk,
+                            exercise,
+                            testYm) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                            (item[i]['ageClass'],
+                            item[i]['ageDegree'],
+                            item[i]['ageGbn'],
+                            item[i]['certGbn'],
+                            item[i]['itemF001'],
+                            item[i]['itemF002'],
+                            item[i]['itemF009'],
+                            item[i]['itemF010'],
+                            item[i]['itemF012'],
+                            item[i]['itemF013'],
+                            item[i]['itemF018'],
+                            item[i]['itemF019'],
+                            item[i]['itemF022'],
+                            item[i]['itemF023'],
+                            item[i]['itemF025'],
+                            item[i]['itemF026'],
+                            item[i]['presNote'],
+                            item[i]['testYm']))
+                            conn.commit()
+                    except KeyError:
+                        pass
 
-            for i in range(len(item)):
-                cursor.execute(f"""INSERT OR IGNORE INTO User(ageClass,
-                        ageDegree,
-                        aggGbn,
-                        certGbn,
-                        height,
-                        weight,
-                        crunch,
-                        jump,
-                        trunkFlexion,
-                        IllinoisAgility,
-                        BMI,
-                        situp,
-                        standinglongjump,
-                        standsit,
-                        twominwalk,
-                        threeMwalk,
-                        exercise,
-                        testYm) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-                    (item[i]['ageClass'],
-                    item[i]['ageDegree'],
-                    item[i]['ageGbn'],
-                    item[i]['certGbn'],
-                    item[i]['itemF001'],
-                    item[i]['itemF002'],
-                    item[i]['itemF009'],
-                    item[i]['itemF010'],
-                    item[i]['itemF012'],
-                    item[i]['itemF013'],
-                    item[i]['itemF018'],
-                    item[i]['itemF019'],
-                    item[i]['itemF022'],
-                    item[i]['itemF023'],
-                    item[i]['itemF025'],
-                    item[i]['itemF026'],
-                    item[i]['presNote'],
-                    item[i]['testYm']))
-            conn.commit()
+        except KeyError:
+            pass    
+                 
     cursor.close()
     conn.close()
+
+#sql에서 csv파일로 데이터 불러오기.    
+def sql_to_csv():
+    conn = sqlite3.connect(DB_FILENAME)
+    df = pd.read_sql("SELECT * FROM User",conn)
+    df.to_csv('user.csv')
+
+
 
 insert_data(collection, results)
 create_sqlite_table()
 move_to_rdb(collection)
+sql_to_csv()

@@ -1,0 +1,14 @@
+{% extends "index.html" %}
+  {% block head %}
+  <section class="py-2 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        {% if result %}
+        <h1 class="fw-light">당신의 체력은 {{result}}등급입니다.</h1>
+        {% endif %}
+        <br>
+        <br>
+      </div>
+    </div>
+   </section>
+   {% endblock %}

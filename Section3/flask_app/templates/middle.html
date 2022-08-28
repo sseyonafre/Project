@@ -1,0 +1,22 @@
+{% extends "senior.html" %}
+{% block form %}
+          <form method='POST',action="{{url_for('user')}}">   
+            <b>연령대 : <select name="ageClass">
+                <option value="">10</option>
+                <option value="60">20</option>
+                <option value="70">30</option>
+                <option value="80">40</option>
+                <option value="80">50</option>
+                <option value="80">60</option>
+
+                </select><br><br>
+              나이 :  <input type="text", name='ageDegree', placeholder="만 19~64"> <br><br>
+              키 :  <input type="text", name='height', placeholder="cm"> <br><br>
+              몸무게 :  <input type="text", name='weight', placeholder="kg"> <br><br>
+              앉아윗몸앞으로구부리기 :  <input type="text", name='trunkFlexion', placeholder="cm"> <br><br>
+              교차윗몸일으키기 :  <input type="text", name='situp', placeholder="최대 횟수(시간제한없음)"> <br><br>
+              제자리멀리뛰기 :  <input type="text", name='standinglongjump', placeholder="cm"> <br><br>
+              </b><br>
+             <input type="submit" , value='결과보기' >
+          </form>
+          {% endblock %}

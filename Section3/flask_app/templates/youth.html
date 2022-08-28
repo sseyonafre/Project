@@ -1,0 +1,15 @@
+{% extends "senior.html" %}
+{% block form %}
+        <form method='POST',action="{{url_for('user')}}"> 
+            <b>
+              나이 :  <input type="text", name='ageDegree', placeholder="만 13~18"> <br><br>
+              키 :  <input type="text", name='height', placeholder="cm"> <br><br>
+              몸무게 :  <input type="text", name='weight', placeholder="kg"> <br><br>
+              반복점프 :  <input type="text", name='jump', placeholder="회/30초"> <br><br>
+              앉아윗몸앞으로구부리기 :  <input type="text", name='trunkFlexion', placeholder="cm"> <br><br>
+              일리노이 민첩성 검사 :  <input type="text", name='IllinoisAgility', placeholder="초"> <br><br>
+              제자리멀리뛰기 :  <input type="text", name='standinglongjump', placeholder="cm"> <br><br>   
+              </b><br>
+             <input type="submit" , value='결과보기' >
+          </form>
+          {% endblock %}
