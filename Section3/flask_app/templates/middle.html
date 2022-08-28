@@ -1,14 +1,7 @@
 {% extends "senior.html" %}
 {% block form %}
           <form method='POST',action="{{url_for('user')}}">   
-            <b>연령대 : <select name="ageClass">
-                <option value="">10</option>
-                <option value="60">20</option>
-                <option value="70">30</option>
-                <option value="80">40</option>
-                <option value="80">50</option>
-                <option value="80">60</option>
-
+            <b>
                 </select><br><br>
               나이 :  <input type="text", name='ageDegree', placeholder="만 19~64"> <br><br>
               키 :  <input type="text", name='height', placeholder="cm"> <br><br>

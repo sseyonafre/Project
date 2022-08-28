@@ -5,6 +5,8 @@ import jwt
 import time
 import os
 from dotenv import load_dotenv
+from apscheduler.schedulers.background import BackgroundScheduler
+
 
 
 app = Flask(__name__)
@@ -17,8 +19,8 @@ def index():
 @app.route('/stat')
 def stat():
     load_dotenv()
-    METABASE_SITE_URL = os.environ.get('METABASEURL')
-    METABASE_SECRET_KEY = os.environ.get('METABASEKEY')
+    METABASE_URL = str(os.environ.get('METABASEURL'))
+    METABASE_SECRET_KEY = str(os.environ.get('METABASEKEY'))
 
     payload = {
       "resource": {"dashboard": 1},
@@ -29,7 +31,7 @@ def stat():
         }
     token = jwt.encode(payload, METABASE_SECRET_KEY, algorithm="HS256")
 
-    iframeUrl = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=true&titled=true"
+    iframeUrl = METABASE_URL + "/embed/dashboard/" + token + "#bordered=true&titled=true"
     
     return render_template('stat.html',iframeUrl=iframeUrl), 200
 
@@ -53,7 +55,7 @@ def user(age=None):
     if request.method == 'POST':
         temp = request.args.get('model')            
         if temp == '노인':
-            with open(r'Section3/middle.pickle','rb') as pickle_file:
+            with open('senior.pickle','rb') as pickle_file:
                 model = pickle.load(pickle_file)
                 def predict_grade(ageClass, ageDegree, height, weight, trunkFlexion, BMI, standsit, twominwalk, threeMwalk):
                     df = pd.DataFrame(
@@ -64,8 +66,9 @@ def user(age=None):
 
                     return pred
         
-            data1 = request.form['ageClass']
+            
             data2 = request.form['ageDegree']
+            data1 = (int(data2)//10)*10
             data3 = request.form['height']
             data4 = request.form['weight']
             data5 = request.form['trunkFlexion']
@@ -78,7 +81,7 @@ def user(age=None):
 
             return render_template('result.html', result=result)
         elif temp == '성인':
-            with open(r'Section3/middle.pickle','rb') as pickle_file:
+            with open('middle.pickle','rb') as pickle_file:
                 model = pickle.load(pickle_file)
                 def predict_grade(ageClass, ageDegree, height, weight, trunkFlexion, BMI, situp, standinglongjump):
                     df = pd.DataFrame(
@@ -89,8 +92,8 @@ def user(age=None):
 
                     return pred
         
-            data1 = request.form['ageClass']
             data2 = request.form['ageDegree']
+            data1 = (int(data2)//10)*10
             data3 = request.form['height']
             data4 = request.form['weight']
             data5 = request.form['trunkFlexion']
@@ -102,7 +105,7 @@ def user(age=None):
 
             return render_template('result.html', result=result)
         elif temp == '청소년':
-            with open(r'Section3/youth.pickle','rb') as pickle_file:
+            with open('youth.pickle','rb') as pickle_file:
                 model = pickle.load(pickle_file)
                 def predict_grade(ageDegree, height, weight,jump, trunkFlexion, IllinoisAgility, BMI, standinglongjump):
                     df = pd.DataFrame(
@@ -127,7 +130,7 @@ def user(age=None):
 
             return render_template('result.html', result=result)
         elif temp == '유소년':
-            with open(r'Section3/underaged.pickle','rb') as pickle_file:
+            with open('underaged.pickle','rb') as pickle_file:
                 model = pickle.load(pickle_file)
                 def predict_grade(ageDegree, height, weight, crunch, trunkFlexion, BMI, standinglongjump):
                     df = pd.DataFrame(
@@ -149,6 +152,7 @@ def user(age=None):
 
             result = predict_grade(data1, data2, data3, data4, data5, data6, data7) 
             return render_template('result.html', result=result)
+            #하나라도 안넣어주면 오류가 생김.. 이걸 어떻게 바꿀 수 없을까...
 
 @app.route('/how')
 def how():
@@ -156,9 +160,27 @@ def how():
 
 @app.route('/exercise')
 def exercise():
-    return render_template('exercise.html'), 200               
+    return render_template('exercise.html'), 200   
 
-#하나라도 안넣어주면 오류가 생김.. 이걸 어떻게 바꿀 수 없을까...
+def model():
+    import model
+    return model  
+def load_db():
+    import load
+    return load
+
+
+# 매일 변경사항 업데이트
+# scheduler = BackgroundScheduler({'apscheduler.timezone':'Asia/Seoul'})
+# # 데이터수집, 적재
+# scheduler.add_job(func=load_db, trigger='interval', days=1)
+
+# # 데이터 추출 및 모델링
+# scheduler.add_job(func = model, trigger= 'interval', days=1)
+
+# scheduler.start()
+
+
 
 if __name__=="__main__":
     app.run() #host='0.0.0.0'

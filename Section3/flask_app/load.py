@@ -171,7 +171,10 @@ def move_to_rdb(collection):
 def sql_to_csv():
     conn = sqlite3.connect(DB_FILENAME)
     df = pd.read_sql("SELECT * FROM User",conn)
-    df.to_csv('user.csv')
+    if not os.path.exists('user.csv'): #user 파일이 없으면 생성하고
+        df.to_csv('user.csv',mode='w')
+    else:
+        df.to_csv('user.csv',mode='a')  # user.csv 파일이 있으면 덮어쓰기.
 
 
 

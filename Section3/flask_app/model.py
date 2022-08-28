@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 import pickle
 
-df = pd.read_csv(r'/Users/sehee/Section3/Project/Section3/user.csv',index_col = 1)
+df = pd.read_csv('user.csv',index_col = 1)
 df.drop(columns=['Unnamed: 0'],inplace=True) 
 df.drop_duplicates(keep='first', inplace=True)
 df.replace('-',np.nan, inplace=True)
@@ -26,7 +26,7 @@ df2.drop(columns=['crunch','jump','IllinoisAgility','standsit','twominwalk','thr
 df3.drop(columns=['jump','situp','standsit','twominwalk','threeMwalk','IllinoisAgility'],inplace=True)
 df4.drop(columns=['crunch','situp','standsit','twominwalk','threeMwalk'],inplace=True)
 
-df['standsit'] = df1['standsit'].replace(np.nan,0)
+df1['standsit'] = df1['standsit'].replace(np.nan,0)
 df2['situp'] = df2['situp'].replace(np.nan,0).round(0).astype(int)
 df3['crunch'] = df3['crunch'].replace(np.nan,0).round(0).astype(int)
 df4['jump'] = df4['jump'].replace(np.nan,0).round(0).astype(int)

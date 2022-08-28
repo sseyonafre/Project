@@ -4,12 +4,13 @@ import json
 import xmltodict
 import os
 from dotenv import load_dotenv
+import datetime
 
 load_dotenv()
 SERVICEKEY = os.environ.get('SERVICEKEY')
 months = []
 results = []
-pr = pd.period_range(start='2019-11',end='2022-08', freq='M')
+pr = pd.period_range(start='2019-11',end= datetime.datetime.now().strftime('%Y-%m'), freq='M')
 for i in pr:
     months.append(str(i).replace('-',''))
 

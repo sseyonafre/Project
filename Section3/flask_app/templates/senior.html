@@ -7,15 +7,8 @@
           <br>
           <br>
           {% block form %}
-          <div style="display:none",name ='model',value = '노인'></div>
           <form method='POST',action="{{url_for('user')}}">
-            <b>연령대 : <select name="ageClass">
-                <option value="">연령대선택</option>
-                <option value="60">60</option>
-                <option value="70">70</option>
-                <option value="80">80</option>
-                <option value="80">90</option>
-                </select><br><br>
+            <b>
               나이 :  <input type="text", name='ageDegree', placeholder="만 65이상"> <br><br>
               키 :  <input type="text", name='height', placeholder="cm"> <br><br>
               몸무게 :  <input type="text", name='weight', placeholder="kg"> <br><br>

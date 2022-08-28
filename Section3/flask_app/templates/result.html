@@ -2,13 +2,19 @@
   {% block head %}
   <section class="py-2 text-center container">
     <div class="row py-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
+
         {% if result %}
         <h1 class="fw-light">당신의 체력은 {{result}}등급입니다.</h1>
+        <br><br>
+        <br><br>
+        <h1 class="fw-light">더 체계적인 체력검사는 국민체력100홈페이지를 통해 신청가능합니다</h1>
+        <br><br>
+        <br><br>
+        <a href="https://nfa.kspo.or.kr/front/movie/movieTypeList.do" target="_blank">다양한 운동처방 보러가기</a>
         {% endif %}
         <br>
         <br>
       </div>
-    </div>
+
    </section>
    {% endblock %}
